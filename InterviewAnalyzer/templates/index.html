@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Interview Answer Analyzer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #eef2f3, #8ec5fc);
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: auto;
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      color: #333;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    .tag {
+      display: inline-block;
+      background: #f2f2f2;
+      padding: 4px 10px;
+      margin: 2px;
+      border-radius: 10px;
+      font-size: 0.9em;
+    }
+
+    .tag.confident { background: #c8f7c5; }
+    .tag.anxious { background: #ffe4e1; }
+    .tag.vague { background: #f7e9a0; }
+    .tag.passionate { background: #ffe5b4; }
+    .tag.arrogant { background: #d4c0f4; }
+    .tag.humble { background: #c3e0f9; }
+    .tag.negative { background: #f8d7da; }
+    .tag.neutral { background: #ddd; }
+
+    textarea {
+      width: 100%;
+      height: 130px;
+      padding: 15px;
+      font-size: 1em;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      resize: vertical;
+      margin-bottom: 20px;
+    }
+
+    button {
+      background-color: #3b82f6;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1em;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2563eb;
+    }
+
+    .card {
+      background: #f9f9f9;
+      padding: 20px;
+      margin-top: 25px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    .score-bar {
+      background-color: #e5e5e5;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .score-fill {
+      height: 18px;
+      background: linear-gradient(to right, #34d399, #3b82f6);
+      width: {{ result['Professionalism Score'] }}%;
+      transition: width 0.4s ease;
+    }
+
+    .sample {
+      background: #eef6ff;
+      padding: 15px;
+      border-left: 5px solid #60a5fa;
+      margin-bottom: 15px;
+      border-radius: 8px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 0.9em;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎯 Interview Answer Analyzer</h1>
+    <form method="POST">
+      <label for="answer"><strong>Your Mock Interview Answer:</strong></label>
+      <textarea name="answer" placeholder="Paste your mock interview answer here..." required>{{ request.form.get('answer', '') }}</textarea>
+      <button type="submit">Analyze</button>
+    </form>
+
+    {% if result %}
+    <div class="card">
+      <h2>📊 Analysis Result</h2>
+      <p><strong>Dominant Sentiment:</strong> <span class="tag {{ result['Dominant Sentiment'] }}">{{ result['Dominant Sentiment']|capitalize }}</span></p>
+      <p><strong>Total Words:</strong> {{ result['Total Words'] }}</p>
+      <p><strong>Sentence Count:</strong> {{ result['Sentence Count'] }}</p>
+
+      <div class="score-bar">
+        <div class="score-fill"></div>
+      </div>
+      <p><strong>Professionalism Score:</strong> {{ result['Professionalism Score'] }} / 100</p>
+
+      <h3>📌 Suggestions</h3>
+      <ul>
+        {% for s in result['Suggestions'] %}
+          <li>{{ s }}</li>
+        {% endfor %}
+      </ul>
+
+      <h3>✨ Highlighted Keywords</h3>
+      {% for word, label in result['Keyword Highlights'] %}
+        <span class="tag {{ label }}">{{ word }}</span>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card">
+      <h2>💡 Sample Answers from Dataset</h2>
+      {% for sample in samples %}
+        <div class="sample">{{ sample }}</div>
+      {% endfor %}
+    </div>
+
+    <div class="footer">Made with ❤️ for interview readiness | Flask App</div>
+  </div>
+</body>
+</html>
