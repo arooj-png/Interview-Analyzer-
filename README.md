@@ -21,7 +21,7 @@ An interactive Flask-based web app that analyzes mock interview answers for tone
 ## 📦 Installation
 
 ```bash
-git clone https://github.com/arooj-png/InterviewAnalyzer.git
-cd InterviewAnalyzer
+git clone https://github.com/arooj-png/Interview-Analyzer-.git
+cd Interview-Analyzer-
 pip install flask
 python app.py
